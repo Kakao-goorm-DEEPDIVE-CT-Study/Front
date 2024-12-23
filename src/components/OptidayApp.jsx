@@ -7,6 +7,7 @@ import Main from "./Main";
 import Todo from "./todo/Todo";
 import Login from "../page/Login";
 import Signup from "../page/Signup"; // Signup 컴포넌트 추가
+import FollowersPage from "../page/FollowersPage";
 
 function OptidayApp() {
   const location = useLocation();
@@ -26,6 +27,7 @@ function OptidayApp() {
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} /> {/* Signup 경로 추가 */}
+          <Route path="/follow" element={<FollowersPage />} /> {/* FollowersPage 경로 추가 */}
         </Routes>
       </div>
     </div>
