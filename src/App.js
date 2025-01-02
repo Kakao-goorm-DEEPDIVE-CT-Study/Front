@@ -1,19 +1,13 @@
-
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
 import './App.css';
-import OptidayApp from './components/OptidayApp';
+import MainPage from './page/MainPage';
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-      <OptidayApp/>
-      </BrowserRouter>
+      <MainPage />
     </div>
   );
 }
 
-
 export default App;
-
-
