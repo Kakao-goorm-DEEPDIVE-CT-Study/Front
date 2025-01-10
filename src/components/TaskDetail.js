@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const TaskDetailContainer = styled.div`
@@ -131,6 +131,23 @@ const CommentActions = styled.div`
 `;
 
 const TaskDetail = ({ task }) => {
+  const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState(task?.comments || []);
+
+  const handleCommentSubmit = () => {
+    if (!newComment.trim()) return;
+
+    const newCommentObj = {
+      author: 'hyun5940',
+      profileImage: 'https://via.placeholder.com/40',
+      content: newComment,
+      isAuthor: true
+    };
+
+    setComments([newCommentObj, ...comments]);
+    setNewComment('');
+  };
+
   return (
     <TaskDetailContainer>
       <TaskHeader>
@@ -155,12 +172,21 @@ const TaskDetail = ({ task }) => {
       <CommentSection>
         <CommentInput>
           <ProfileImage src="https://via.placeholder.com/40" alt="my profile" />
-          <Input placeholder="댓글을 입력하세요..." />
-          <CommentButton>등록</CommentButton>
+          <Input 
+            placeholder="댓글을 입력하세요..." 
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleCommentSubmit();
+              }
+            }}
+          />
+          <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
         </CommentInput>
 
         <CommentList>
-          {task?.comments?.map((comment, index) => (
+          {comments.map((comment, index) => (
             <CommentItem key={index}>
               <ProfileImage src={comment.profileImage} alt="profile" />
               <CommentContent>
