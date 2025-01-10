@@ -22,10 +22,25 @@ const TaskTitle = styled.h2`
 `;
 
 const CategoryBadge = styled.span`
-  background-color: #FFD700;
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.9rem;
+  background-color: ${props => {
+    switch (props.category) {
+      case '운동':
+        return '#FFD700';
+      case '공부':
+        return '#98FB98';
+      case '업무':
+        return '#87CEEB';
+      case '취미':
+        return '#DDA0DD';
+      case '약속':
+        return '#FFA07A';
+      default:
+        return '#e0e0e0';
+    }
+  }};
 `;
 
 const TaskActions = styled.div`
@@ -262,7 +277,7 @@ const TaskDetail = ({ task, onUpdate }) => {
         ) : (
           <TaskTitle>{task?.title}</TaskTitle>
         )}
-        <CategoryBadge>{task?.category}</CategoryBadge>
+        <CategoryBadge category={task?.category}>{task?.category}</CategoryBadge>
       </TaskHeader>
       
       <TaskActions>
