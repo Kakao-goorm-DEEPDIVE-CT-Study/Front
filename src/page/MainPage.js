@@ -40,9 +40,7 @@ const DetailContainer = styled.div`
 
 const MainPage = () => {
   const [selectedTask, setSelectedTask] = useState(null);
-  
-  // 임시 데이터
-  const tasks = [
+  const [tasks, setTasks] = useState([
     {
       id: 1,
       title: '운동 카테고리 명',
@@ -63,10 +61,18 @@ const MainPage = () => {
       ]
     },
     // 더 많은 테스크 추가 가능
-  ];
+  ]);
 
   const handleTaskClick = (task) => {
     setSelectedTask(task);
+  };
+
+  const handleTaskUpdate = (updatedTask) => {
+    const updatedTasks = tasks.map(task => 
+      task.id === updatedTask.id ? updatedTask : task
+    );
+    setTasks(updatedTasks);
+    setSelectedTask(updatedTask);
   };
 
   return (
@@ -83,7 +89,12 @@ const MainPage = () => {
         ))}
       </TaskList>
       <DetailContainer>
-        {selectedTask && <TaskDetail task={selectedTask} />}
+        {selectedTask && (
+          <TaskDetail 
+            task={selectedTask} 
+            onUpdate={handleTaskUpdate}
+          />
+        )}
       </DetailContainer>
     </PageContainer>
   );

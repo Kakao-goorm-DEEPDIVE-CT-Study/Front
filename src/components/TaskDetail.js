@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const TaskDetailContainer = styled.div`
@@ -66,6 +66,7 @@ const TaskContent = styled.div`
   padding: 20px;
   background-color: #f8f8f8;
   border-radius: 8px;
+  white-space: pre-line;
 `;
 
 const CommentSection = styled.div`
@@ -130,9 +131,81 @@ const CommentActions = styled.div`
   gap: 10px;
 `;
 
-const TaskDetail = ({ task }) => {
+const EditInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  font-size: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+`;
+
+const EditTextarea = styled.textarea`
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-height: 100px;
+  resize: vertical;
+  font-family: inherit;
+  white-space: pre-line;
+`;
+
+const EditTimeContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+`;
+
+const TimeSelect = styled.select`
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+
+const VisibilityToggle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  label {
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    cursor: pointer;
+  }
+`;
+
+const TaskDetail = ({ task, onUpdate }) => {
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState(task?.comments || []);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(task?.title);
+  const [editedContent, setEditedContent] = useState(task?.content);
+  const [editedTime, setEditedTime] = useState(task?.time || 'PM 10:00 - PM 11:00');
+  const [editedIsPublic, setEditedIsPublic] = useState(task?.isPublic);
+
+  useEffect(() => {
+    setComments(task?.comments || []);
+    setEditedTitle(task?.title);
+    setEditedContent(task?.content);
+    setEditedTime(task?.time || 'PM 10:00 - PM 11:00');
+    setEditedIsPublic(task?.isPublic);
+  }, [task]);
+
+  const timeOptions = [
+    'AM 12:00 - AM 1:00', 'AM 1:00 - AM 2:00', 'AM 2:00 - AM 3:00',
+    'AM 3:00 - AM 4:00', 'AM 4:00 - AM 5:00', 'AM 5:00 - AM 6:00',
+    'AM 6:00 - AM 7:00', 'AM 7:00 - AM 8:00', 'AM 8:00 - AM 9:00',
+    'AM 9:00 - AM 10:00', 'AM 10:00 - AM 11:00', 'AM 11:00 - PM 12:00',
+    'PM 12:00 - PM 1:00', 'PM 1:00 - PM 2:00', 'PM 2:00 - PM 3:00',
+    'PM 3:00 - PM 4:00', 'PM 4:00 - PM 5:00', 'PM 5:00 - PM 6:00',
+    'PM 6:00 - PM 7:00', 'PM 7:00 - PM 8:00', 'PM 8:00 - PM 9:00',
+    'PM 9:00 - PM 10:00', 'PM 10:00 - PM 11:00', 'PM 11:00 - AM 12:00'
+  ];
 
   const handleCommentSubmit = () => {
     if (!newComment.trim()) return;
@@ -144,29 +217,109 @@ const TaskDetail = ({ task }) => {
       isAuthor: true
     };
 
-    setComments([newCommentObj, ...comments]);
+    const updatedComments = [newCommentObj, ...comments];
+    setComments(updatedComments);
+    onUpdate({
+      ...task,
+      comments: updatedComments
+    });
     setNewComment('');
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    const updatedTask = {
+      ...task,
+      title: editedTitle,
+      content: editedContent,
+      time: editedTime,
+      isPublic: editedIsPublic
+    };
+    onUpdate(updatedTask);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditedTitle(task?.title);
+    setEditedContent(task?.content);
+    setEditedTime(task?.time);
+    setEditedIsPublic(task?.isPublic);
+    setIsEditing(false);
   };
 
   return (
     <TaskDetailContainer>
       <TaskHeader>
-        <TaskTitle>{task?.title}</TaskTitle>
+        {isEditing ? (
+          <EditInput
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            placeholder="제목을 입력하세요"
+          />
+        ) : (
+          <TaskTitle>{task?.title}</TaskTitle>
+        )}
         <CategoryBadge>{task?.category}</CategoryBadge>
       </TaskHeader>
       
       <TaskActions>
-        <ActionButton>수정</ActionButton>
-        <ActionButton delete>삭제</ActionButton>
+        {isEditing ? (
+          <>
+            <ActionButton onClick={handleSave}>저장</ActionButton>
+            <ActionButton onClick={handleCancel}>취소</ActionButton>
+          </>
+        ) : (
+          <>
+            <ActionButton onClick={handleEdit}>수정</ActionButton>
+            <ActionButton delete>삭제</ActionButton>
+          </>
+        )}
       </TaskActions>
 
       <TaskInfo>
-        <TimeInfo>{task?.time}</TimeInfo>
-        <VisibilityBadge>{task?.isPublic ? '공개' : '비공개'}</VisibilityBadge>
+        {isEditing ? (
+          <>
+            <EditTimeContainer>
+              <TimeSelect
+                value={editedTime}
+                onChange={(e) => setEditedTime(e.target.value)}
+              >
+                {timeOptions.map(time => (
+                  <option key={time} value={time}>{time}</option>
+                ))}
+              </TimeSelect>
+            </EditTimeContainer>
+            <VisibilityToggle>
+              <input
+                type="checkbox"
+                id="visibility"
+                checked={editedIsPublic}
+                onChange={(e) => setEditedIsPublic(e.target.checked)}
+              />
+              <label htmlFor="visibility">공개</label>
+            </VisibilityToggle>
+          </>
+        ) : (
+          <>
+            <TimeInfo>{task?.time}</TimeInfo>
+            <VisibilityBadge>{task?.isPublic ? '공개' : '비공개'}</VisibilityBadge>
+          </>
+        )}
       </TaskInfo>
 
       <TaskContent>
-        {task?.content}
+        {isEditing ? (
+          <EditTextarea
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
+            placeholder="내용을 입력하세요"
+          />
+        ) : (
+          task?.content
+        )}
       </TaskContent>
 
       <CommentSection>
