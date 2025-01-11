@@ -1,4 +1,5 @@
 import { Search } from "lucide-react"
+import { Bell }  from "lucide-react"
 import { Link } from "react-router-dom"
 
 
@@ -21,6 +22,7 @@ function Headerbar(){
                     </div>
                     <ul className="navbar-nav">
                         <li className="nav-item fs-3"><div><Search></Search></div></li>
+                        <li className="nav-item fs-3 ms-3"><div><Bell></Bell></div></li>
                         <li className="nav-item fs-5">
                             <Link className="nav-link" to="/login">Login</Link></li>
                             <li className="nav-item fs-5">
