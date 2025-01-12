@@ -6,6 +6,7 @@ import Feedback from "./Feedback"
 import Main from "./Main"
 import Todo from "./todo/Todo"
 import Login from "../page/Login"
+import Mypage from "./Mypage"
 
 
 function OptidayApp(){
@@ -15,13 +16,13 @@ function OptidayApp(){
   
   return(
     <div className="OptidayApp">
-      
       {!isLoginPage&&<Headerbar/>}
       <div className="center">
       {!isLoginPage&&<Sidebar/>}
         <Routes>
           <Route path='/' element={<Main/>}/>
           <Route path='/todo' element={<Todo/>}/>
+          <Route path='/mypage' element={<Mypage/>}/>
           <Route path='/feedback' element={<Feedback/>}/>
           <Route path='/login' element={<Login/>}/>
         </Routes>
