@@ -43,6 +43,31 @@ const CategoryBadge = styled.span`
   }};
 `;
 
+const CategorySelect = styled.select`
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: ${props => {
+    switch (props.value) {
+      case '운동':
+        return '#FFD700';
+      case '공부':
+        return '#98FB98';
+      case '업무':
+        return '#87CEEB';
+      case '취미':
+        return '#DDA0DD';
+      case '약속':
+        return '#FFA07A';
+      default:
+        return '#e0e0e0';
+    }
+  }};
+  color: #000;
+  font-weight: bold;
+`;
+
 const TaskActions = styled.div`
   display: flex;
   gap: 10px;
@@ -204,6 +229,7 @@ const TaskDetail = ({ task, onUpdate }) => {
   const [editedDate, setEditedDate] = useState(task?.date || new Date().toISOString().split('T')[0]);
   const [editedIsPublic, setEditedIsPublic] = useState(task?.isPublic);
   const [editedIsUrgent, setEditedIsUrgent] = useState(task?.urgent || false);
+  const [editedCategory, setEditedCategory] = useState(task?.category || '운동');
 
   useEffect(() => {
     setComments(task?.comments || []);
@@ -213,6 +239,7 @@ const TaskDetail = ({ task, onUpdate }) => {
     setEditedDate(task?.date || new Date().toISOString().split('T')[0]);
     setEditedIsPublic(task?.isPublic);
     setEditedIsUrgent(task?.urgent || false);
+    setEditedCategory(task?.category);
   }, [task]);
 
   const timeOptions = [
@@ -257,7 +284,8 @@ const TaskDetail = ({ task, onUpdate }) => {
       time: editedTime,
       date: editedDate,
       isPublic: editedIsPublic,
-      urgent: editedIsUrgent
+      urgent: editedIsUrgent,
+      category: editedCategory
     };
     onUpdate(updatedTask);
     setIsEditing(false);
@@ -270,6 +298,7 @@ const TaskDetail = ({ task, onUpdate }) => {
     setEditedDate(task?.date);
     setEditedIsPublic(task?.isPublic);
     setEditedIsUrgent(task?.urgent || false);
+    setEditedCategory(task?.category);
     setIsEditing(false);
   };
 
@@ -277,15 +306,29 @@ const TaskDetail = ({ task, onUpdate }) => {
     <TaskDetailContainer>
       <TaskHeader>
         {isEditing ? (
-          <EditInput
-            value={editedTitle}
-            onChange={(e) => setEditedTitle(e.target.value)}
-            placeholder="제목을 입력하세요"
-          />
+          <>
+            <EditInput
+              value={editedTitle}
+              onChange={(e) => setEditedTitle(e.target.value)}
+              placeholder="제목을 입력하세요"
+            />
+            <CategorySelect
+              value={editedCategory}
+              onChange={(e) => setEditedCategory(e.target.value)}
+            >
+              <option value="운동">운동</option>
+              <option value="공부">공부</option>
+              <option value="업무">업무</option>
+              <option value="취미">취미</option>
+              <option value="약속">약속</option>
+            </CategorySelect>
+          </>
         ) : (
-          <TaskTitle>{task?.title}</TaskTitle>
+          <>
+            <TaskTitle>{task?.title}</TaskTitle>
+            <CategoryBadge category={task?.category}>{task?.category}</CategoryBadge>
+          </>
         )}
-        <CategoryBadge category={task?.category}>{task?.category}</CategoryBadge>
       </TaskHeader>
       
       <TaskActions>

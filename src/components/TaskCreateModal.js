@@ -14,12 +14,30 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
+const getCategoryColor = (category) => {
+  switch (category) {
+    case '운동':
+      return '#FFD700';
+    case '공부':
+      return '#98FB98';
+    case '업무':
+      return '#87CEEB';
+    case '취미':
+      return '#DDA0DD';
+    case '약속':
+      return '#FFA07A';
+    default:
+      return '#e0e0e0';
+  }
+};
+
 const ModalContent = styled.div`
-  background-color: #FFD700;
+  background-color: ${props => props.category ? getCategoryColor(props.category) : '#FFD700'};
   padding: 20px;
   border-radius: 10px;
   width: 400px;
   position: relative;
+  transition: background-color 0.3s ease;
 `;
 
 const Form = styled.form`
@@ -33,6 +51,13 @@ const Input = styled.input`
   border: none;
   border-radius: 5px;
   font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: background-color 0.3s ease;
+
+  &:focus {
+    background-color: white;
+    outline: none;
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -42,6 +67,13 @@ const TextArea = styled.textarea`
   font-size: 1rem;
   min-height: 100px;
   resize: vertical;
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: background-color 0.3s ease;
+
+  &:focus {
+    background-color: white;
+    outline: none;
+  }
 `;
 
 const DateTimeContainer = styled.div`
@@ -56,6 +88,14 @@ const TimeSelect = styled.select`
   border: none;
   border-radius: 5px;
   width: 100px;
+  background-color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:focus {
+    background-color: white;
+    outline: none;
+  }
 `;
 
 const TimeSelectContainer = styled.div`
@@ -71,6 +111,9 @@ const TimeSpan = styled.span`
 const ToggleContainer = styled.div`
   display: flex;
   gap: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 5px;
 `;
 
 const ToggleLabel = styled.label`
@@ -93,11 +136,17 @@ const Button = styled.button`
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  background-color: ${props => props.primary ? '#4CAF50' : '#f0f0f0'};
+  background-color: ${props => props.primary ? '#4CAF50' : 'rgba(255, 255, 255, 0.9)'};
   color: ${props => props.primary ? 'white' : 'black'};
+  transition: all 0.3s ease;
 
   &:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -139,7 +188,7 @@ const TaskCreateModal = ({ onClose, onSubmit }) => {
 
   return (
     <ModalOverlay onClick={onClose}>
-      <ModalContent onClick={e => e.stopPropagation()}>
+      <ModalContent onClick={e => e.stopPropagation()} category={category}>
         <Form onSubmit={handleSubmit}>
           <Input
             type="text"
@@ -192,6 +241,11 @@ const TaskCreateModal = ({ onClose, onSubmit }) => {
           <CategorySelect
             value={category}
             onChange={(e) => setCategory(e.target.value)}
+            style={{
+              backgroundColor: getCategoryColor(category),
+              color: category === '운동' ? 'black' : 'white',
+              fontWeight: 'bold'
+            }}
           >
             <option value="운동">운동</option>
             <option value="공부">공부</option>
