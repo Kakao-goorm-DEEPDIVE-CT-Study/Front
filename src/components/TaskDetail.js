@@ -201,14 +201,18 @@ const TaskDetail = ({ task, onUpdate }) => {
   const [editedTitle, setEditedTitle] = useState(task?.title);
   const [editedContent, setEditedContent] = useState(task?.content);
   const [editedTime, setEditedTime] = useState(task?.time || 'PM 10:00 - PM 11:00');
+  const [editedDate, setEditedDate] = useState(task?.date || new Date().toISOString().split('T')[0]);
   const [editedIsPublic, setEditedIsPublic] = useState(task?.isPublic);
+  const [editedIsUrgent, setEditedIsUrgent] = useState(task?.urgent || false);
 
   useEffect(() => {
     setComments(task?.comments || []);
     setEditedTitle(task?.title);
     setEditedContent(task?.content);
     setEditedTime(task?.time || 'PM 10:00 - PM 11:00');
+    setEditedDate(task?.date || new Date().toISOString().split('T')[0]);
     setEditedIsPublic(task?.isPublic);
+    setEditedIsUrgent(task?.urgent || false);
   }, [task]);
 
   const timeOptions = [
@@ -251,7 +255,9 @@ const TaskDetail = ({ task, onUpdate }) => {
       title: editedTitle,
       content: editedContent,
       time: editedTime,
-      isPublic: editedIsPublic
+      date: editedDate,
+      isPublic: editedIsPublic,
+      urgent: editedIsUrgent
     };
     onUpdate(updatedTask);
     setIsEditing(false);
@@ -261,7 +267,9 @@ const TaskDetail = ({ task, onUpdate }) => {
     setEditedTitle(task?.title);
     setEditedContent(task?.content);
     setEditedTime(task?.time);
+    setEditedDate(task?.date);
     setEditedIsPublic(task?.isPublic);
+    setEditedIsUrgent(task?.urgent || false);
     setIsEditing(false);
   };
 
@@ -298,6 +306,12 @@ const TaskDetail = ({ task, onUpdate }) => {
         {isEditing ? (
           <>
             <EditTimeContainer>
+              <input
+                type="date"
+                value={editedDate}
+                onChange={(e) => setEditedDate(e.target.value)}
+                style={{ marginRight: '10px' }}
+              />
               <TimeSelect
                 value={editedTime}
                 onChange={(e) => setEditedTime(e.target.value)}
@@ -315,11 +329,19 @@ const TaskDetail = ({ task, onUpdate }) => {
                 onChange={(e) => setEditedIsPublic(e.target.checked)}
               />
               <label htmlFor="visibility">공개</label>
+              <input
+                type="checkbox"
+                id="urgent"
+                checked={editedIsUrgent}
+                onChange={(e) => setEditedIsUrgent(e.target.checked)}
+                style={{ marginLeft: '10px' }}
+              />
+              <label htmlFor="urgent">긴급</label>
             </VisibilityToggle>
           </>
         ) : (
           <>
-            <TimeInfo>{task?.time}</TimeInfo>
+            <TimeInfo>{task?.date} {task?.time}</TimeInfo>
             <VisibilityBadge>{task?.isPublic ? '공개' : '비공개'}</VisibilityBadge>
           </>
         )}
