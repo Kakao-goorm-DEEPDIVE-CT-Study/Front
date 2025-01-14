@@ -1,12 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
 const TaskDetailContainer = styled.div`
-  background-color: #fff;
+  background-color: ${props => {
+    switch (props.category) {
+      case '운동':
+        return '#FFD700';
+      case '공부':
+        return '#98FB98';
+      case '업무':
+        return '#87CEEB';
+      case '취미':
+        return '#DDA0DD';
+      case '약속':
+        return '#FFA07A';
+      default:
+        return '#fff';
+    }
+  }};
   border-radius: 8px;
   padding: 20px;
-  width: 100%;
-  height: 100%;
+  width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  transition: background-color 0.3s ease;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+  padding: 5px;
+  z-index: 1;
+
+  &:hover {
+    color: #000;
+  }
 `;
 
 const TaskHeader = styled.div`
@@ -219,7 +267,7 @@ const VisibilityToggle = styled.div`
   }
 `;
 
-const TaskDetail = ({ task, onUpdate }) => {
+const TaskDetail = ({ task, onUpdate, onClose }) => {
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState(task?.comments || []);
   const [isEditing, setIsEditing] = useState(false);
@@ -303,142 +351,149 @@ const TaskDetail = ({ task, onUpdate }) => {
   };
 
   return (
-    <TaskDetailContainer>
-      <TaskHeader>
-        {isEditing ? (
-          <>
-            <EditInput
-              value={editedTitle}
-              onChange={(e) => setEditedTitle(e.target.value)}
-              placeholder="제목을 입력하세요"
-            />
-            <CategorySelect
-              value={editedCategory}
-              onChange={(e) => setEditedCategory(e.target.value)}
-            >
-              <option value="운동">운동</option>
-              <option value="공부">공부</option>
-              <option value="업무">업무</option>
-              <option value="취미">취미</option>
-              <option value="약속">약속</option>
-            </CategorySelect>
-          </>
-        ) : (
-          <>
-            <TaskTitle>{task?.title}</TaskTitle>
-            <CategoryBadge category={task?.category}>{task?.category}</CategoryBadge>
-          </>
-        )}
-      </TaskHeader>
-      
-      <TaskActions>
-        {isEditing ? (
-          <>
-            <ActionButton onClick={handleSave}>저장</ActionButton>
-            <ActionButton onClick={handleCancel}>취소</ActionButton>
-          </>
-        ) : (
-          <>
-            <ActionButton onClick={handleEdit}>수정</ActionButton>
-            <ActionButton delete>삭제</ActionButton>
-          </>
-        )}
-      </TaskActions>
-
-      <TaskInfo>
-        {isEditing ? (
-          <>
-            <EditTimeContainer>
-              <input
-                type="date"
-                value={editedDate}
-                onChange={(e) => setEditedDate(e.target.value)}
-                style={{ marginRight: '10px' }}
+    <ModalOverlay onClick={onClose}>
+      <TaskDetailContainer 
+        onClick={e => e.stopPropagation()}
+        category={task?.category}
+      >
+        <CloseButton onClick={onClose}>&times;</CloseButton>
+        <TaskHeader>
+          {isEditing ? (
+            <>
+              <EditInput
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+                placeholder="제목을 입력하세요"
               />
-              <TimeSelect
-                value={editedTime}
-                onChange={(e) => setEditedTime(e.target.value)}
+              <CategorySelect
+                value={editedCategory}
+                onChange={(e) => setEditedCategory(e.target.value)}
               >
-                {timeOptions.map(time => (
-                  <option key={time} value={time}>{time}</option>
-                ))}
-              </TimeSelect>
-            </EditTimeContainer>
-            <VisibilityToggle>
-              <input
-                type="checkbox"
-                id="visibility"
-                checked={editedIsPublic}
-                onChange={(e) => setEditedIsPublic(e.target.checked)}
-              />
-              <label htmlFor="visibility">공개</label>
-              <input
-                type="checkbox"
-                id="urgent"
-                checked={editedIsUrgent}
-                onChange={(e) => setEditedIsUrgent(e.target.checked)}
-                style={{ marginLeft: '10px' }}
-              />
-              <label htmlFor="urgent">긴급</label>
-            </VisibilityToggle>
-          </>
-        ) : (
-          <>
-            <TimeInfo>{task?.date} {task?.time}</TimeInfo>
-            <VisibilityBadge>{task?.isPublic ? '공개' : '비공개'}</VisibilityBadge>
-          </>
-        )}
-      </TaskInfo>
+                <option value="운동">운동</option>
+                <option value="공부">공부</option>
+                <option value="업무">업무</option>
+                <option value="취미">취미</option>
+                <option value="약속">약속</option>
+              </CategorySelect>
+            </>
+          ) : (
+            <>
+              <TaskTitle>{task?.title}</TaskTitle>
+              <CategoryBadge category={task?.category}>{task?.category}</CategoryBadge>
+            </>
+          )}
+        </TaskHeader>
+        
+        <TaskActions>
+          {isEditing ? (
+            <>
+              <ActionButton onClick={handleSave}>저장</ActionButton>
+              <ActionButton onClick={handleCancel}>취소</ActionButton>
+            </>
+          ) : (
+            <>
+              <ActionButton onClick={handleEdit}>수정</ActionButton>
+              <ActionButton delete>삭제</ActionButton>
+            </>
+          )}
+        </TaskActions>
 
-      <TaskContent>
-        {isEditing ? (
-          <EditTextarea
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-            placeholder="내용을 입력하세요"
-          />
-        ) : (
-          task?.content
-        )}
-      </TaskContent>
+        <TaskInfo>
+          {isEditing ? (
+            <>
+              <EditTimeContainer>
+                <input
+                  type="date"
+                  value={editedDate}
+                  onChange={(e) => setEditedDate(e.target.value)}
+                  style={{ marginRight: '10px' }}
+                />
+                <TimeSelect
+                  value={editedTime}
+                  onChange={(e) => setEditedTime(e.target.value)}
+                >
+                  {timeOptions.map(time => (
+                    <option key={time} value={time}>{time}</option>
+                  ))}
+                </TimeSelect>
+              </EditTimeContainer>
+              <VisibilityToggle>
+                <input
+                  type="checkbox"
+                  id="visibility"
+                  checked={editedIsPublic}
+                  onChange={(e) => setEditedIsPublic(e.target.checked)}
+                />
+                <label htmlFor="visibility">공개</label>
+                <input
+                  type="checkbox"
+                  id="urgent"
+                  checked={editedIsUrgent}
+                  onChange={(e) => setEditedIsUrgent(e.target.checked)}
+                  style={{ marginLeft: '10px' }}
+                />
+                <label htmlFor="urgent">긴급</label>
+              </VisibilityToggle>
+            </>
+          ) : (
+            <>
+              <TimeInfo>{task?.date} {task?.time}</TimeInfo>
+              <VisibilityBadge>{task?.isPublic ? '공개' : '비공개'}</VisibilityBadge>
+            </>
+          )}
+        </TaskInfo>
 
-      <CommentSection>
-        <CommentInput>
-          <ProfileImage src="https://via.placeholder.com/40" alt="my profile" />
-          <Input 
-            placeholder="댓글을 입력하세요..." 
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handleCommentSubmit();
-              }
-            }}
-          />
-          <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
-        </CommentInput>
+        <TaskContent>
+          {isEditing ? (
+            <EditTextarea
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+              placeholder="내용을 입력하세요"
+            />
+          ) : (
+            task?.content
+          )}
+        </TaskContent>
 
-        <CommentList>
-          {comments.map((comment, index) => (
-            <CommentItem key={index}>
-              <ProfileImage src={comment.profileImage} alt="profile" />
-              <CommentContent>
-                <CommentHeader>
-                  <span>{comment.author}</span>
-                  {comment.isAuthor && (
-                    <CommentActions>
-                      <ActionButton>수정</ActionButton>
-                      <ActionButton delete>삭제</ActionButton>
-                    </CommentActions>
-                  )}
-                </CommentHeader>
-                <p>{comment.content}</p>
-              </CommentContent>
-            </CommentItem>
-          ))}
-        </CommentList>
-      </CommentSection>
-    </TaskDetailContainer>
+        <CommentSection>
+          <CommentInput>
+            <ProfileImage src="https://via.placeholder.com/40" alt="my profile" />
+            <Input 
+              placeholder="댓글을 입력하세요..." 
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleCommentSubmit();
+                }
+              }}
+              style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+            />
+            <CommentButton onClick={handleCommentSubmit}>등록</CommentButton>
+          </CommentInput>
+
+          <CommentList>
+            {comments.map((comment, index) => (
+              <CommentItem key={index}>
+                <ProfileImage src={comment.profileImage} alt="profile" />
+                <CommentContent>
+                  <CommentHeader>
+                    <span>{comment.author}</span>
+                    {comment.isAuthor && (
+                      <CommentActions>
+                        <ActionButton>수정</ActionButton>
+                        <ActionButton delete>삭제</ActionButton>
+                      </CommentActions>
+                    )}
+                  </CommentHeader>
+                  <p>{comment.content}</p>
+                </CommentContent>
+              </CommentItem>
+            ))}
+          </CommentList>
+        </CommentSection>
+      </TaskDetailContainer>
+    </ModalOverlay>
   );
 };
 

@@ -233,14 +233,13 @@ const MainPage = () => {
         ))}
         <AddButton onClick={() => setShowCreateModal(true)}>+</AddButton>
       </TaskList>
-      <DetailContainer>
-        {selectedTask && (
-          <TaskDetail 
-            task={selectedTask} 
-            onUpdate={handleTaskUpdate}
-          />
-        )}
-      </DetailContainer>
+      {selectedTask && (
+        <TaskDetail
+          task={selectedTask}
+          onUpdate={handleTaskUpdate}
+          onClose={() => setSelectedTask(null)}
+        />
+      )}
       {showCreateModal && (
         <TaskCreateModal
           onClose={() => setShowCreateModal(false)}
