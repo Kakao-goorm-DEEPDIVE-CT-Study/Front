@@ -1,41 +1,100 @@
 .search-accounts-page {
-    padding: 20px;
-  }
-  
-  .search-accounts-page h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-  }
-  
-  .search-input {
-    width: 100%;
-    max-width: 400px;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .accounts-list {
-    list-style: none;
-    padding: 0;
-  }
-  
+  padding: 20px;
+}
+
+.search-accounts-page h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.accounts-list {
+  list-style: none;
+  padding: 0;
+}
+
+.account-item {
+  display: flex;
+  justify-content: space-between; /* 이름, 태그, 버튼 간격 조정 */
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  gap: 15vw; /* 이름과 버튼 간 간격 확대 */
+  white-space: nowrap; /* 줄바꿈 방지 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 텍스트가 잘릴 경우 "..." 표시 */
+}
+
+.account-name {
+  font-weight: bold;
+  margin-right: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-tag {
+  color: #666;
+  margin-right: auto; /* 태그와 버튼 간 간격을 자동으로 확보 */
+  white-space: nowrap;
+}
+
+.action-button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  white-space: nowrap;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+.action-button.following {
+  background-color: #ccc;
+  color: #333;
+}
+
+/* 반응형 미디어 쿼리 */
+@media (max-width: 1024px) {
   .account-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #eee;
-    border-radius: 4px;
+    gap: 18vw; /* 화면이 작아질 때 이름과 버튼 간 간격 추가 */
   }
-  
-  .account-name {
-    font-weight: bold;
+
+  .action-button {
+    font-size: 12px;
+    padding: 5px 10px;
   }
-  
+}
+
+@media (max-width: 768px) {
+  .account-item {
+    flex-wrap: wrap; /* 작은 화면에서 줄바꿈 허용 */
+    gap: 25vw; /* 모바일에서 이름과 버튼 간 간격 확대 */
+  }
+
   .account-tag {
-    color: #666;
+    margin-right: 10px;
   }
-  
+
+  .action-button {
+    margin-top: 10px; /* 줄바꿈 시 버튼 간 간격 추가 */
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}

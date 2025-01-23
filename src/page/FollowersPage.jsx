@@ -14,7 +14,6 @@ const FollowersPage = () => {
   };
 
   const handleButtonClick = (id) => {
-    // 언팔로우 버튼 클릭 시 항목 삭제
     setFollowers((prevFollowers) => prevFollowers.filter((f) => f.id !== id));
   };
 
@@ -26,7 +25,6 @@ const FollowersPage = () => {
   return (
     <div className="page-container">
       <header className="page-header">
-        <h1>팔로워 13(나를 팔로우한 사람) 팔로잉 10(내가 한 사람) 계정 찾기</h1>
         <input
           type="text"
           placeholder="팔로우 계정 검색"

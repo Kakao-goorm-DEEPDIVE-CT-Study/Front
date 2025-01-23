@@ -1,26 +1,25 @@
 /* 공통 컨테이너 스타일 */
 .page-container {
-  max-width: 800px;
+  max-width: 90%;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
   color: #333;
+  box-sizing: border-box;
 }
 
 /* 헤더 스타일 */
-.page-header h1 {
-  font-size: 18px;
-  margin-bottom: 20px;
-  font-weight: bold;
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .page-header .search-input {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  font-size: 16px;
+  padding: 15px;
+  font-size: 1.2vw;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
   outline: none;
 }
 
@@ -32,80 +31,84 @@
 .follow-list ul {
   list-style: none;
   padding: 0;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .follow-item {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* 버튼과 이름 간 양 끝 배치 */
   align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #ddd;
+  padding: 20px; /* 리스트 항목 여백 */
+  border-bottom: 2px solid #ddd;
+  gap: 20vw; /* 이름과 버튼 간 간격을 더 넓게 설정 */
+  flex-wrap: nowrap; /* 한 줄로 강제 배치 */
 }
 
 .profile {
   display: flex;
   align-items: center;
-}
-
-.profile-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
-  object-fit: cover;
+  gap: 3vw; /* 이미지와 이름 간 간격 */
+  flex-wrap: nowrap; /* 이름과 이미지도 한 줄로 유지 */
 }
 
 .profile-info {
-  font-size: 16px;
+  font-size: 1.5vw;
+  margin-right: auto; /* 이름이 왼쪽 정렬되며 버튼과 간격 유지 */
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  overflow: hidden; /* 내용이 너무 길 경우 잘리게 설정 */
+  text-overflow: ellipsis; /* 텍스트가 잘릴 경우 "..." 표시 */
 }
 
-/* 버튼 스타일 */
+.profile-image {
+  width: 10vw;
+  height: 10vw;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .action-button {
   background-color: #007BFF;
   color: white;
   border: none;
-  padding: 5px 15px;
-  border-radius: 5px;
-  font-size: 14px;
+  padding: 0.8vw 2vw; /* 버튼 패딩 */
+  border-radius: 8px;
+  font-size: 1.2vw;
   cursor: pointer;
   transition: background-color 0.3s;
+  white-space: nowrap; /* 버튼 텍스트도 한 줄로 유지 */
 }
 
 .action-button:hover {
   background-color: #0056b3;
 }
 
-/* 페이지네이션 스타일 */
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+/* 반응형 미디어 쿼리 */
+@media (max-width: 1024px) {
+  .follow-item {
+    gap: 20vw; /* 화면이 작아질 때 이름과 버튼 간 간격 증가 */
+  }
+
+  .profile {
+    gap: 5vw;
+  }
+
+  .action-button {
+    font-size: 1.5vw;
+    padding: 2vw 5vw;
+  }
 }
 
-.pagination button {
-  background-color: #f0f0f0;
-  border: none;
-  margin: 0 5px;
-  padding: 5px 10px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 3px;
-  transition: background-color 0.3s;
-}
+@media (max-width: 768px) {
+  .follow-item {
+    gap: 25vw; /* 모바일에서 이름과 버튼 간 간격 크게 설정 */
+  }
 
-.pagination button.active {
-  background-color: #007BFF;
-  color: white;
-}
+  .profile {
+    gap: 8vw;
+  }
 
-.pagination button:hover {
-  background-color: #ddd;
-}
-
-.pagination span {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  color: #888;
+  .action-button {
+    font-size: 4vw;
+    padding: 3vw 6vw;
+  }
 }

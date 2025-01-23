@@ -1,137 +1,114 @@
-.followers-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%; /* Full width of the viewport */
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* 공통 컨테이너 스타일 */
+.page-container {
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* 헤더 스타일 */
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.page-header .search-input {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2vw;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+}
+
+.page-header .search-input:focus {
+  border-color: #007bff;
+}
+
+/* 팔로우 리스트 스타일 */
+.follow-list ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+}
+
+.follow-item {
+  display: flex;
+  justify-content: space-between; /* 버튼과 이름 간 양 끝 배치 */
+  align-items: center;
+  padding: 20px; /* 리스트 항목 여백 */
+  border-bottom: 2px solid #ddd;
+  gap: 20vw; /* 이름과 버튼 간 간격을 더 넓게 설정 */
+  flex-wrap: nowrap; /* 한 줄로 강제 배치 */
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 3vw; /* 이미지와 이름 간 간격 */
+  flex-wrap: nowrap; /* 이름과 이미지도 한 줄로 유지 */
+}
+
+.profile-info {
+  font-size: 1.5vw;
+  margin-right: auto; /* 이름이 왼쪽 정렬되며 버튼과 간격 유지 */
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  overflow: hidden; /* 내용이 너무 길 경우 잘리게 설정 */
+  text-overflow: ellipsis; /* 텍스트가 잘릴 경우 "..." 표시 */
+}
+
+.profile-image {
+  width: 10vw;
+  height: 10vw;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.action-button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 0.8vw 2vw; /* 버튼 패딩 */
+  border-radius: 8px;
+  font-size: 1.2vw;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  white-space: nowrap; /* 버튼 텍스트도 한 줄로 유지 */
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+/* 반응형 미디어 쿼리 */
+@media (max-width: 1024px) {
+  .follow-item {
+    gap: 20vw; /* 화면이 작아질 때 이름과 버튼 간 간격 증가 */
   }
-  
-  .followers-header {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .search-bar {
-    width: 80%; /* Wider search bar */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  .followers-list {
-    width: 100%; /* Full width */
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Space between items */
-    padding: 10px;
-    box-sizing: border-box;
-  }
-  
-  .followers-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%; /* Full width of the container */
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
+
   .profile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    gap: 5vw;
   }
-  
-  .profile img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
+
+  .action-button {
+    font-size: 1.5vw;
+    padding: 2vw 5vw;
   }
-  
-  .profile-info {
-    flex-grow: 1; /* Take up remaining space */
+}
+
+@media (max-width: 768px) {
+  .follow-item {
+    gap: 25vw; /* 모바일에서 이름과 버튼 간 간격 크게 설정 */
   }
-  
-  .profile-info .name {
-    font-size: 18px;
-    font-weight: bold;
+
+  .profile {
+    gap: 8vw;
   }
-  
-  .profile-info .tag {
-    font-size: 14px;
-    color: #888;
+
+  .action-button {
+    font-size: 4vw;
+    padding: 3vw 6vw;
   }
-  
-  .follow-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #28a745;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .follow-button.following {
-    background-color: #6c757d;
-  }
-  
-  .pagination {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 20px;
-  }
-  
-  .pagination button {
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    background-color: #f8f8f8;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .pagination button.active {
-    background-color: #28a745;
-    color: white;
-  }
-  .navigation {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .nav-button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    text-decoration: none;
-    color: #333;
-    background: #f0f0f0;
-    border-radius: 5px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .nav-button.active {
-    background: #007BFF;
-    color: white;
-  }
-  
-  .nav-button:hover {
-    background: #0056b3;
-    color: white;
-  }
-  
+}

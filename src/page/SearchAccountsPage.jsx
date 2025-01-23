@@ -4,10 +4,10 @@ import "../styles/SearchAccountsPage.css"; // 스타일 파일 경로 확인 후
 const SearchAccountsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [accounts] = useState([
-    { id: 1, name: "홍길동", tag: "#1234" },
-    { id: 2, name: "김길동", tag: "#5678" },
-    { id: 3, name: "이순신", tag: "#4321" },
-    { id: 4, name: "강감찬", tag: "#8765" },
+    { id: 1, name: "홍길동", tag: "#1234", isFollowing: false },
+    { id: 2, name: "김길동", tag: "#5678", isFollowing: false },
+    { id: 3, name: "이순신", tag: "#4321", isFollowing: false },
+    { id: 4, name: "강감찬", tag: "#8765", isFollowing: false },
   ]);
   const [filteredAccounts, setFilteredAccounts] = useState(accounts);
 
@@ -17,6 +17,16 @@ const SearchAccountsPage = () => {
       account.name.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredAccounts(filtered);
+  };
+
+  const toggleFollow = (id) => {
+    setFilteredAccounts((prevAccounts) =>
+      prevAccounts.map((account) =>
+        account.id === id
+          ? { ...account, isFollowing: !account.isFollowing }
+          : account
+      )
+    );
   };
 
   return (
@@ -34,6 +44,14 @@ const SearchAccountsPage = () => {
           <li key={account.id} className="account-item">
             <span className="account-name">{account.name}</span>
             <span className="account-tag">{account.tag}</span>
+            <button
+              className={`action-button ${
+                account.isFollowing ? "following" : ""
+              }`}
+              onClick={() => toggleFollow(account.id)}
+            >
+              {account.isFollowing ? "언팔로우" : "팔로우"}
+            </button>
           </li>
         ))}
       </ul>
